@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 class HealthCheckController {
 
-    @GetMapping("/user")
+    @GetMapping("/user/health")
     fun healthCheck() = "GOGO User Service OK"
 
 }
