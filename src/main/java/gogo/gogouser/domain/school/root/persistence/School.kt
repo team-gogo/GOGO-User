@@ -7,8 +7,8 @@ import jakarta.persistence.*
 class School(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "school_id")
-    val schoolId: Long = 0,
+    @Column(name = "id")
+    val id: Long = 0,
 
     @Column(name = "school_name", nullable = false)
     val schoolName: String,

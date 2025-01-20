@@ -1,5 +1,6 @@
 package gogo.gogouser.domain.school.detail.persistence
 
+import gogo.gogouser.domain.school.root.persistence.School
 import jakarta.persistence.*
 
 @Entity
@@ -7,11 +8,12 @@ import jakarta.persistence.*
 class SchoolDetail(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "school_detail_id")
-    val schoolDetailId: Long = 0,
+    @Column(name = "id")
+    val id: Long = 0,
 
-    @Column(name = "school_id", nullable = false, unique = true)
-    val schoolId: Long,
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "school_id", nullable = false, unique = true)
+    val school: School,
 
     @Column(name = "address", nullable = false)
     val address: String,
