@@ -1,5 +1,7 @@
 package gogo.gogouser.domain.student.persistence
 
+import gogo.gogouser.domain.school.root.persistence.School
+import gogo.gogouser.domain.user.persistence.User
 import jakarta.persistence.*
 
 @Entity
@@ -7,20 +9,25 @@ import jakarta.persistence.*
 class Student(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "student_id")
-    val studentId: Long = 0,
+    @Column(name = "id")
+    val id: Long = 0,
 
-    @Column(name = "user_id", nullable = false, unique = true)
-    val userId: Long,
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false, unique = true)
+    val user: User,
 
-    @Column(name = "school_id", nullable = false)
-    val schoolId: Long,
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "school_id", nullable = false)
+    val school: School,
 
     @Column(name = "device_token", nullable = true)
     val deviceToken: String?,
 
     @Column(name = "class_number", nullable = false)
     val classNumber: Int,
+
+    @Column(name = "student_number", nullable = false)
+    val studentNumber: Int,
 
     @Column(name = "is_active_profanity_filter", nullable = false)
     val isActiveProfanityFilter: Boolean = false,

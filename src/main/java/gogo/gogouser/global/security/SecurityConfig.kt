@@ -42,7 +42,11 @@ class SecurityConfig(
         http.authorizeHttpRequests { httpRequests ->
             httpRequests
                 // health check
-                .requestMatchers("/user/health").permitAll()
+                .requestMatchers(HttpMethod.GET, "/user/health").permitAll()
+
+                // server to server
+                .requestMatchers(HttpMethod.GET, "/user/student").permitAll()
+
                 .anyRequest().denyAll()
         }
 
