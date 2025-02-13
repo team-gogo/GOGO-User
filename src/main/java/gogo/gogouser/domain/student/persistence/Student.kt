@@ -1,5 +1,6 @@
 package gogo.gogouser.domain.student.persistence
 
+import gogo.gogouser.domain.auth.application.dto.AuthSignUpReqDto
 import gogo.gogouser.domain.school.root.persistence.School
 import gogo.gogouser.domain.user.persistence.User
 import jakarta.persistence.*
@@ -32,4 +33,16 @@ class Student(
     @Column(name = "is_active_profanity_filter", nullable = false)
     val isActiveProfanityFilter: Boolean = false,
 ) {
+    companion object {
+
+        fun of(user: User, school: School, dto: AuthSignUpReqDto) =
+            Student(
+                user = user,
+                school = school,
+                deviceToken = dto.deviceToken,
+                classNumber = dto.classNumber,
+                studentNumber = dto.studentNumber,
+            )
+
+    }
 }

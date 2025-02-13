@@ -2,6 +2,7 @@ package gogo.gogouser.domain.auth.presentation
 
 import gogo.gogouser.domain.auth.application.AuthService
 import gogo.gogouser.domain.auth.application.dto.AuthLoginReqDto
+import gogo.gogouser.domain.auth.application.dto.AuthSignUpReqDto
 import gogo.gogouser.domain.auth.application.dto.AuthTokenDto
 import jakarta.validation.Valid
 import org.springframework.http.ResponseEntity
@@ -27,6 +28,14 @@ class AuthController(
     ): ResponseEntity<AuthTokenDto> {
         val response = authService.refresh(token)
         return ResponseEntity.ok(response)
+    }
+
+    @PostMapping("/signup")
+    fun signup(
+        @RequestBody @Valid dto: AuthSignUpReqDto
+    ): ResponseEntity<Void> {
+        authService.signup(dto)
+        return ResponseEntity.ok().build()
     }
 
 }

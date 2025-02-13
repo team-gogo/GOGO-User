@@ -1,5 +1,6 @@
 package gogo.gogouser.domain.school.detail.persistence
 
+import gogo.gogouser.domain.auth.application.dto.SchoolInfoDto
 import gogo.gogouser.domain.school.root.persistence.School
 import jakarta.persistence.*
 
@@ -27,4 +28,18 @@ class SchoolDetail(
     @Column(name = "phoneNumber", nullable = false)
     val phoneNumber: String,
 ) {
+
+    companion object {
+
+        fun of (school: School, dto: SchoolInfoDto) =
+            SchoolDetail(
+                school = school,
+                address = dto.address,
+                countOfStudent = dto.countOfStudent,
+                region = dto.region,
+                phoneNumber = dto.phoneNumber,
+            )
+
+    }
+
 }
