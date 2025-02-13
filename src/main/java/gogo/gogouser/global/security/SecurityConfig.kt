@@ -1,5 +1,6 @@
 package gogo.gogouser.global.security
 
+import gogo.gogouser.domain.auth.application.AuthReader
 import gogo.gogouser.global.filter.AuthenticationFilter
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -21,7 +22,7 @@ class SecurityConfig(
 ) {
 
     @Bean
-    fun filterChain(http: HttpSecurity): SecurityFilterChain {
+    fun filterChain(http: HttpSecurity, authReader: AuthReader): SecurityFilterChain {
         http.formLogin { it.disable() }
             .httpBasic { it.disable() }
 
@@ -43,6 +44,10 @@ class SecurityConfig(
             httpRequests
                 // health check
                 .requestMatchers(HttpMethod.GET, "/user/health").permitAll()
+
+                // auth
+                .requestMatchers(HttpMethod.POST, "/user/auth/login").permitAll()
+                .requestMatchers(HttpMethod.POST, "/user/auth/refresh").permitAll()
 
                 // server to server
                 .requestMatchers(HttpMethod.GET, "/user/student").permitAll()

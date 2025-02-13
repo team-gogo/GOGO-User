@@ -8,7 +8,7 @@ data class AuthLoginReqDto(
     val deviceToken: String?
 )
 
-data class AuthLoginResDto(
+data class AuthTokenDto(
     val accessToken: String,
     val refreshToken: String
 )
