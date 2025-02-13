@@ -14,19 +14,19 @@ class User(
     @Column(name = "email", nullable = false)
     val email: String,
 
-    @Column(name = "name", nullable = false)
-    val name: String,
+    @Column(name = "name", nullable = true)
+    val name: String? = null,
 
-    @Column(name = "student_number", nullable = false)
-    val studentNumber: Int,
+    @Column(name = "student_number", nullable = true)
+    val studentNumber: Int? = null,
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "sex", nullable = false)
-    val sex: Sex,
+    @Column(name = "sex", nullable = true)
+    val sex: Sex? = null,
 
     @Enumerated(EnumType.STRING)
     @Column(name = "authority", nullable = false)
-    val authority: Authority,
+    val authority: Authority = Authority.UNAUTHENTICATED,
 
     @Column(name = "is_suspended", nullable = false)
     val isSuspended: Boolean = false,
@@ -34,6 +34,11 @@ class User(
     @Column(name = "created_at", nullable = false)
     val createdAt: LocalDateTime = LocalDateTime.now(),
 ) {
+
+    companion object {
+        fun of(email: String) = User(email = email)
+    }
+
 }
 
 enum class Sex {
