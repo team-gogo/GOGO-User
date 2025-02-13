@@ -8,7 +8,6 @@ import org.springframework.data.redis.core.index.Indexed
 @RedisHash("refresh_token")
 data class RefreshToken(
     @Id
-    @Indexed
     val userId: Long,
 
     @Indexed
