@@ -1,5 +1,6 @@
 package gogo.gogouser.domain.user.persistence
 
+import gogo.gogouser.domain.auth.application.dto.AuthSignUpReqDto
 import jakarta.persistence.*
 import java.time.LocalDateTime
 
@@ -15,25 +16,28 @@ class User(
     val email: String,
 
     @Column(name = "name", nullable = true)
-    val name: String? = null,
-
-    @Column(name = "student_number", nullable = true)
-    val studentNumber: Int? = null,
+    var name: String? = null,
 
     @Enumerated(EnumType.STRING)
     @Column(name = "sex", nullable = true)
-    val sex: Sex? = null,
+    var sex: Sex? = null,
 
     @Enumerated(EnumType.STRING)
     @Column(name = "authority", nullable = false)
-    val authority: Authority = Authority.UNAUTHENTICATED,
+    var authority: Authority = Authority.UNAUTHENTICATED,
 
     @Column(name = "is_suspended", nullable = false)
-    val isSuspended: Boolean = false,
+    var isSuspended: Boolean = false,
 
     @Column(name = "created_at", nullable = false)
     val createdAt: LocalDateTime = LocalDateTime.now(),
 ) {
+
+    fun signUp(dto: AuthSignUpReqDto) {
+        name = dto.name
+        sex = dto.sex
+        authority = Authority.USER
+    }
 
     companion object {
         fun of(email: String) = User(email = email)

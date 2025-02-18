@@ -1,24 +1,34 @@
 package gogo.gogouser.domain.auth.application
 
 import gogo.gogouser.domain.auth.application.dto.AuthLoginReqDto
+import gogo.gogouser.domain.auth.application.dto.AuthSignUpReqDto
 import gogo.gogouser.domain.auth.application.dto.AuthTokenDto
+import gogo.gogouser.domain.school.root.application.SchoolProcessor
+import gogo.gogouser.domain.school.root.persistence.SchoolRepository
+import gogo.gogouser.domain.student.persistence.Student
+import gogo.gogouser.domain.student.persistence.StudentRepository
 import gogo.gogouser.domain.user.application.UserProcessor
 import gogo.gogouser.domain.user.application.UserReader
 import gogo.gogouser.domain.user.persistence.User
 import gogo.gogouser.global.external.GoogleLoginFeignClientService
 import gogo.gogouser.global.jwt.JwtGenerator
+import gogo.gogouser.global.util.UserUtil
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
 @Service
 class AuthServiceImpl(
+    private val userUtil: UserUtil,
     private val authReader: AuthReader,
     private val authProcessor: AuthProcessor,
     private val userMapper: AuthMapper,
     private val userProcessor: UserProcessor,
+    private val schoolProcessor: SchoolProcessor,
     private val jwtGenerator: JwtGenerator,
     private val oauthService: GoogleLoginFeignClientService,
-    private val userReader: UserReader
+    private val userReader: UserReader,
+    private val schoolRepository: SchoolRepository,
+    private val studentRepository: StudentRepository
 ) : AuthService {
 
     @Transactional
@@ -33,6 +43,15 @@ class AuthServiceImpl(
         val refreshToken = authReader.read(token)
         val user = userReader.read(refreshToken.userId)
         return generateToken(user)
+    }
+
+    @Transactional
+    override fun signup(dto: AuthSignUpReqDto) {
+        val user = userUtil.getCurrentUser()
+        val school = schoolProcessor.getSchoolOrCreate(dto)
+        val student = Student.of(user, school, dto)
+        studentRepository.save(student)
+        userProcessor.signUp(user, dto)
     }
 
     private fun generateToken(user: User): AuthTokenDto {
