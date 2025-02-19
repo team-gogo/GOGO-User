@@ -49,10 +49,13 @@ class SecurityConfig(
                 // auth
                 .requestMatchers(HttpMethod.POST, "/user/auth/login").permitAll()
                 .requestMatchers(HttpMethod.POST, "/user/auth/refresh").permitAll()
-                .requestMatchers(HttpMethod.POST, "/user/auth/signup").hasAuthority(Authority.UNAUTHENTICATED.name)
+                .requestMatchers(HttpMethod.POST, "/user/auth/signup").hasRole(Authority.UNAUTHENTICATED.name)
 
                 // server to server
                 .requestMatchers(HttpMethod.GET, "/user/student").permitAll()
+
+                // test
+                .requestMatchers(HttpMethod.POST, "/user/auth/test-login/{user_id}").permitAll()
 
                 .anyRequest().denyAll()
         }
