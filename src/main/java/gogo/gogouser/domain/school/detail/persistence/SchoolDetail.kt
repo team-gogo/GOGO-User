@@ -22,9 +22,6 @@ class SchoolDetail(
     @Column(name = "region", nullable = false)
     val region: String,
 
-    @Column(name = "count_of_student", nullable = false)
-    val countOfStudent: Int,
-
     @Column(name = "phoneNumber", nullable = false)
     val phoneNumber: String,
 ) {
@@ -35,7 +32,6 @@ class SchoolDetail(
             SchoolDetail(
                 school = school,
                 address = dto.address,
-                countOfStudent = dto.countOfStudent,
                 region = dto.region,
                 phoneNumber = dto.phoneNumber,
             )

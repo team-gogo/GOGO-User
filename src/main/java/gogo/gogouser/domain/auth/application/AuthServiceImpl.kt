@@ -4,7 +4,6 @@ import gogo.gogouser.domain.auth.application.dto.AuthLoginReqDto
 import gogo.gogouser.domain.auth.application.dto.AuthSignUpReqDto
 import gogo.gogouser.domain.auth.application.dto.AuthTokenDto
 import gogo.gogouser.domain.school.root.application.SchoolProcessor
-import gogo.gogouser.domain.school.root.persistence.SchoolRepository
 import gogo.gogouser.domain.student.persistence.Student
 import gogo.gogouser.domain.student.persistence.StudentRepository
 import gogo.gogouser.domain.user.application.UserProcessor
@@ -27,7 +26,6 @@ class AuthServiceImpl(
     private val jwtGenerator: JwtGenerator,
     private val oauthService: GoogleLoginFeignClientService,
     private val userReader: UserReader,
-    private val schoolRepository: SchoolRepository,
     private val studentRepository: StudentRepository
 ) : AuthService {
 

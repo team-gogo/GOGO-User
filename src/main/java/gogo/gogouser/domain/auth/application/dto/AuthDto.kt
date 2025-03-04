@@ -16,6 +16,8 @@ data class AuthSignUpReqDto(
     @NotBlank
     val name: String,
     @NotNull
+    val grade: Int,
+    @NotNull
     val classNumber: Int,
     @NotNull
     val studentNumber: Int,
@@ -36,8 +38,6 @@ data class SchoolInfoDto(
     val address: String,
     @NotBlank
     val region: String,
-    @NotNull
-    val countOfStudent: Int,
     @NotNull
     val phoneNumber: String,
 )
