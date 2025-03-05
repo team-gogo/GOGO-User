@@ -24,6 +24,9 @@ class Student(
     @Column(name = "device_token", nullable = true)
     val deviceToken: String?,
 
+    @Column(name = "grade", nullable = false)
+    val grade: Int,
+
     @Column(name = "class_number", nullable = false)
     val classNumber: Int,
 
@@ -40,6 +43,7 @@ class Student(
                 user = user,
                 school = school,
                 deviceToken = dto.deviceToken,
+                grade = dto.grade,
                 classNumber = dto.classNumber,
                 studentNumber = dto.studentNumber,
             )
