@@ -16,3 +16,13 @@ data class StudentDto(
     val isActiveProfanityFilter: Boolean,
     val createdAt: LocalDateTime
 )
+
+data class StudentInfoDto(
+    val studentId: Long,
+    val schoolId: Long,
+    val sex: Sex,
+    val name: String,
+    val deviceToken: String?,
+    val classNumber: Int,
+    val studentNumber: Int,
+)

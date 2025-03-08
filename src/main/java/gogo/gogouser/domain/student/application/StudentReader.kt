@@ -15,4 +15,6 @@ class StudentReader(
         studentRepository.findByUserId(userId)
             ?: throw UserException("Not Found Student user id = $userId", HttpStatus.NOT_FOUND.value())
 
+    fun readByIds(studentIds: List<Long>): List<Student> = studentRepository.findByIds(studentIds)
+
 }
