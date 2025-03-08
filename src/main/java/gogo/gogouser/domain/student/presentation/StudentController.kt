@@ -1,6 +1,7 @@
 package gogo.gogouser.domain.student.presentation
 
 import gogo.gogouser.domain.student.application.StudentService
+import gogo.gogouser.domain.student.application.dto.StudentBundleDto
 import gogo.gogouser.domain.student.application.dto.StudentDto
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
@@ -19,6 +20,14 @@ class StudentController(
         @RequestParam("userId") userId: Long
     ): ResponseEntity<StudentDto> {
         val response = studentService.queryByUserId(userId)
+        return ResponseEntity.ok(response)
+    }
+
+    @GetMapping("/student/bundle")
+    fun queryBundle(
+        @RequestParam("studentIds") studentIs: List<Long>
+    ): ResponseEntity<StudentBundleDto> {
+        val response = studentService.queryBundle(studentIs)
         return ResponseEntity.ok(response)
     }
 

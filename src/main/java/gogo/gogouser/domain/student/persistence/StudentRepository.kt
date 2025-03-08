@@ -6,6 +6,6 @@ import org.springframework.data.jpa.repository.Query
 interface StudentRepository: JpaRepository<Student, Long> {
     fun findByUserId(userId: Long): Student?
 
-    @Query("SELECT s FROM Student s WHERE s.id in (:id)")
+    @Query("SELECT s FROM Student s WHERE s.id in (:ids)")
     fun findByIds(ids: List<Long>): List<Student>
 }

@@ -17,6 +17,10 @@ data class StudentDto(
     val createdAt: LocalDateTime
 )
 
+data class StudentBundleDto(
+    val students: List<StudentInfoDto>
+)
+
 data class StudentInfoDto(
     val studentId: Long,
     val schoolId: Long,

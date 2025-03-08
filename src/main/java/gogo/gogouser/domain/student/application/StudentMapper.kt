@@ -1,5 +1,6 @@
 package gogo.gogouser.domain.student.application
 
+import gogo.gogouser.domain.student.application.dto.StudentBundleDto
 import gogo.gogouser.domain.student.application.dto.StudentDto
 import gogo.gogouser.domain.student.application.dto.StudentInfoDto
 import gogo.gogouser.domain.student.persistence.Student
@@ -28,15 +29,17 @@ class StudentMapper {
     }
 
     fun mapStudents(students: List<Student>) =
-        students.map {
-            StudentInfoDto(
-                studentId = it.id,
-                schoolId = it.school.id,
-                sex = it.user.sex!!,
-                name = it.user.name!!,
-                deviceToken = it.deviceToken,
-                classNumber = it.classNumber,
-                studentNumber = it.studentNumber,
-            )
-        }
+        StudentBundleDto (
+            students = students.map {
+                StudentInfoDto(
+                    studentId = it.id,
+                    schoolId = it.school.id,
+                    sex = it.user.sex!!,
+                    name = it.user.name!!,
+                    deviceToken = it.deviceToken,
+                    classNumber = it.classNumber,
+                    studentNumber = it.studentNumber,
+                )
+            }
+        )
 }

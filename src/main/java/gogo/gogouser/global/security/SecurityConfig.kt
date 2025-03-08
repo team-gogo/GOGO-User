@@ -53,6 +53,7 @@ class SecurityConfig(
 
                 // server to server
                 .requestMatchers(HttpMethod.GET, "/user/student").permitAll()
+                .requestMatchers(HttpMethod.GET, "/user/student/bundle").permitAll()
 
                 // test
                 .requestMatchers(HttpMethod.POST, "/user/auth/test-login/{user_id}").permitAll()

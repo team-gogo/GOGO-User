@@ -1,5 +1,6 @@
 package gogo.gogouser.domain.student.application
 
+import gogo.gogouser.domain.student.application.dto.StudentBundleDto
 import gogo.gogouser.domain.student.application.dto.StudentDto
 import gogo.gogouser.domain.student.application.dto.StudentInfoDto
 import org.springframework.stereotype.Service
@@ -18,7 +19,7 @@ class StudentServiceImpl(
     }
 
     @Transactional(readOnly = true)
-    override fun queryBundle(studentIds: List<Long>): List<StudentInfoDto> {
+    override fun queryBundle(studentIds: List<Long>): StudentBundleDto {
         val students = studentReader.readByIds(studentIds)
         return studentMapper.mapStudents(students)
     }
