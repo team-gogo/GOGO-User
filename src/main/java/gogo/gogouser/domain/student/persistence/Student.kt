@@ -17,7 +17,7 @@ class Student(
     @JoinColumn(name = "user_id", nullable = false, unique = true)
     val user: User,
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "school_id", nullable = false)
     val school: School,
 
