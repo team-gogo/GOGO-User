@@ -1,9 +1,11 @@
 package gogo.gogouser.domain.student.application
 
+import gogo.gogouser.domain.student.application.dto.StudentInfoDto
 import gogo.gogouser.domain.student.application.dto.StudentSearchInfoDto
 import gogo.gogouser.domain.student.persistence.Student
 import gogo.gogouser.domain.student.persistence.StudentRepository
 import gogo.gogouser.global.error.UserException
+import org.springframework.data.repository.findByIdOrNull
 import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Component
 
@@ -11,6 +13,10 @@ import org.springframework.stereotype.Component
 class StudentReader(
     private val studentRepository: StudentRepository
 ) {
+
+    fun read(studentId: Long): Student =
+        studentRepository.findByIdOrNull(studentId)
+            ?: throw UserException("Not Found Student student id = $studentId", HttpStatus.NOT_FOUND.value())
 
     fun readByUserId(userId: Long): Student =
         studentRepository.findByUserId(userId)

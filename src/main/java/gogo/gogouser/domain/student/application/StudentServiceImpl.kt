@@ -2,6 +2,7 @@ package gogo.gogouser.domain.student.application
 
 import gogo.gogouser.domain.student.application.dto.StudentBundleDto
 import gogo.gogouser.domain.student.application.dto.StudentDto
+import gogo.gogouser.domain.student.application.dto.StudentInfoDto
 import gogo.gogouser.domain.student.application.dto.StudentSearchDto
 import gogo.gogouser.global.util.UserUtil
 import org.springframework.stereotype.Service
@@ -32,6 +33,12 @@ class StudentServiceImpl(
         val student = studentReader.readByUserId(userId)
         val searchStudents = studentReader.search(student.school.id, name)
         return StudentSearchDto(searchStudents)
+    }
+
+    @Transactional(readOnly = true)
+    override fun query(studentId: Long): StudentInfoDto {
+        val student = studentReader.read(studentId)
+        return studentMapper.mapInfo(student)
     }
 
 }

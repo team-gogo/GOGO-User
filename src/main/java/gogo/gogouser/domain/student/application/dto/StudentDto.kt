@@ -18,10 +18,10 @@ data class StudentDto(
 )
 
 data class StudentBundleDto(
-    val students: List<StudentInfoDto>
+    val students: List<StudentBundleInfoDto>
 )
 
-data class StudentInfoDto(
+data class StudentBundleInfoDto(
     val studentId: Long,
     val schoolId: Long,
     val sex: Sex,
@@ -40,4 +40,15 @@ data class StudentSearchInfoDto(
     val name: String,
     val classNumber: Int,
     val studentNumber: Int,
+)
+
+data class StudentInfoDto(
+    val studentId: Long,
+    val schoolId: Long,
+    val schoolName: String,
+    val sex: Sex,
+    val name: String,
+    val classNumber: Int,
+    val studentNumber: Int,
+    val isFiltered: Boolean,
 )

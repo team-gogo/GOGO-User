@@ -1,6 +1,8 @@
 package gogo.gogouser.domain.student.application
 
+import gogo.gogouser.domain.school.root.persistence.QSchool.school
 import gogo.gogouser.domain.student.application.dto.StudentBundleDto
+import gogo.gogouser.domain.student.application.dto.StudentBundleInfoDto
 import gogo.gogouser.domain.student.application.dto.StudentDto
 import gogo.gogouser.domain.student.application.dto.StudentInfoDto
 import gogo.gogouser.domain.student.persistence.Student
@@ -28,10 +30,21 @@ class StudentMapper {
         )
     }
 
+    fun mapInfo(student: Student): StudentInfoDto = StudentInfoDto(
+        studentId = student.id,
+        schoolId = student.school.id,
+        schoolName = student.school.schoolName,
+        classNumber = student.classNumber,
+        studentNumber = student.studentNumber,
+        sex = student.user.sex!!,
+        isFiltered = student.isActiveProfanityFilter,
+        name = student.user.name!!
+    )
+
     fun mapStudents(students: List<Student>) =
         StudentBundleDto (
             students = students.map {
-                StudentInfoDto(
+                StudentBundleInfoDto(
                     studentId = it.id,
                     schoolId = it.school.id,
                     sex = it.user.sex!!,
