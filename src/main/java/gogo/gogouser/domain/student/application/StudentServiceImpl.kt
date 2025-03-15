@@ -1,6 +1,7 @@
 package gogo.gogouser.domain.student.application
 
 import gogo.gogouser.domain.student.application.dto.StudentBundleDto
+import gogo.gogouser.domain.student.application.dto.StudentInfoDto
 import gogo.gogouser.domain.student.application.dto.StudentSearchDto
 import gogo.gogouser.domain.student.persistence.Student
 import gogo.gogouser.global.util.UserUtil
@@ -11,7 +12,8 @@ import org.springframework.transaction.annotation.Transactional
 class StudentServiceImpl(
     private val studentReader: StudentReader,
     private val studentMapper: StudentMapper,
-    private val userUtil: UserUtil
+    private val userUtil: UserUtil,
+    private val studentProcessor: StudentProcessor
 ) : StudentService {
 
     @Transactional(readOnly = true)
@@ -32,6 +34,13 @@ class StudentServiceImpl(
         val student = studentReader.readByUserId(userId)
         val searchStudents = studentReader.search(student.school.id, name)
         return StudentSearchDto(searchStudents)
+    }
+
+    @Transactional
+    override fun update(dto: StudentInfoDto) {
+        val userId = userUtil.getCurrentUserId()
+        val student = studentReader.readByUserId(userId)
+        studentProcessor.update(student, dto)
     }
 
 }

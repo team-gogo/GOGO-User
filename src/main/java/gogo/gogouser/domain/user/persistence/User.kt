@@ -39,6 +39,11 @@ class User(
         authority = Authority.USER
     }
 
+    fun update(name: String, sex: Sex) {
+        this.name = name
+        this.sex = sex
+    }
+
     companion object {
         fun of(email: String) = User(email = email)
     }

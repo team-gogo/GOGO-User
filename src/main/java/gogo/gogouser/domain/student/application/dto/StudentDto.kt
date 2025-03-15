@@ -1,6 +1,8 @@
 package gogo.gogouser.domain.student.application.dto
 
 import gogo.gogouser.domain.user.persistence.Sex
+import jakarta.validation.constraints.NotBlank
+import jakarta.validation.constraints.NotNull
 import java.time.LocalDateTime
 
 data class StudentDto(
@@ -50,5 +52,20 @@ data class StudentInfoDto(
     val name: String,
     val classNumber: Int,
     val studentNumber: Int,
+    val isFiltered: Boolean,
+)
+
+data class StudentInfoUpdateDto(
+    @NotBlank
+    val name: String,
+    @NotNull
+    val sex: Sex,
+    @NotBlank
+    val grade: Int,
+    @NotNull
+    val classNumber: Int,
+    @NotNull
+    val studentNumber: Int,
+    @NotNull
     val isFiltered: Boolean,
 )
