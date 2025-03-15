@@ -1,6 +1,5 @@
 package gogo.gogouser.domain.student.application
 
-import gogo.gogouser.domain.school.root.persistence.QSchool.school
 import gogo.gogouser.domain.student.application.dto.StudentBundleDto
 import gogo.gogouser.domain.student.application.dto.StudentBundleInfoDto
 import gogo.gogouser.domain.student.application.dto.StudentDto
@@ -26,7 +25,8 @@ class StudentMapper {
             classNumber = student.classNumber,
             studentNumber = student.studentNumber,
             isActiveProfanityFilter = student.isActiveProfanityFilter,
-            createdAt = user.createdAt
+            createdAt = user.createdAt,
+            grade = student.grade,
         )
     }
 
@@ -53,6 +53,7 @@ class StudentMapper {
                     deviceToken = it.deviceToken,
                     classNumber = it.classNumber,
                     studentNumber = it.studentNumber,
+                    grade = it.grade,
                 )
             }
         )
