@@ -13,6 +13,7 @@ data class StudentDto(
     val name: String,
     val deviceToken: String?,
     val sex: Sex,
+    val grade: Int,
     val classNumber: Int,
     val studentNumber: Int,
     val isActiveProfanityFilter: Boolean,
@@ -29,6 +30,7 @@ data class StudentBundleInfoDto(
     val sex: Sex,
     val name: String,
     val deviceToken: String?,
+    val grade: Int,
     val classNumber: Int,
     val studentNumber: Int,
 )
