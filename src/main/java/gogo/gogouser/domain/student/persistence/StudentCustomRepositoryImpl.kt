@@ -22,6 +22,7 @@ class StudentCustomRepositoryImpl(
                 StudentSearchInfoDto::class.java,
                 student.id,
                 student.user.name,
+                student.grade,
                 student.classNumber,
                 student.studentNumber
             )

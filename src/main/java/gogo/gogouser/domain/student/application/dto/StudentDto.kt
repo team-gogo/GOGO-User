@@ -38,6 +38,7 @@ data class StudentSearchDto(
 data class StudentSearchInfoDto(
     val studentId: Long,
     val name: String,
+    val grade: Int,
     val classNumber: Int,
     val studentNumber: Int,
 )
@@ -48,6 +49,7 @@ data class StudentInfoDto(
     val schoolName: String,
     val sex: Sex,
     val name: String,
+    val grade: Int,
     val classNumber: Int,
     val studentNumber: Int,
     val isFiltered: Boolean,

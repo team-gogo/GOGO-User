@@ -38,7 +38,8 @@ class StudentMapper {
         studentNumber = student.studentNumber,
         sex = student.user.sex!!,
         isFiltered = student.isActiveProfanityFilter,
-        name = student.user.name!!
+        name = student.user.name!!,
+        grade = student.grade
     )
 
     fun mapStudents(students: List<Student>) =
