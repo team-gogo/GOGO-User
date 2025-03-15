@@ -8,4 +8,6 @@ interface StudentRepository: JpaRepository<Student, Long>, StudentCustomReposito
 
     @Query("SELECT s FROM Student s WHERE s.id in (:ids)")
     fun findByIds(ids: List<Long>): List<Student>
+
+    fun existsBySchoolIdAndGradeAndClassNumberAndStudentNumber(schoolId: Long, grade: Int, classNumber: Int, studentNumber: Int): Boolean
 }

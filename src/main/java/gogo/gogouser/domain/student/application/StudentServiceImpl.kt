@@ -1,7 +1,7 @@
 package gogo.gogouser.domain.student.application
 
 import gogo.gogouser.domain.student.application.dto.StudentBundleDto
-import gogo.gogouser.domain.student.application.dto.StudentInfoDto
+import gogo.gogouser.domain.student.application.dto.StudentInfoUpdateDto
 import gogo.gogouser.domain.student.application.dto.StudentSearchDto
 import gogo.gogouser.domain.student.persistence.Student
 import gogo.gogouser.global.util.UserUtil
@@ -13,7 +13,8 @@ class StudentServiceImpl(
     private val studentReader: StudentReader,
     private val studentMapper: StudentMapper,
     private val userUtil: UserUtil,
-    private val studentProcessor: StudentProcessor
+    private val studentProcessor: StudentProcessor,
+    private val studentValidator: StudentValidator
 ) : StudentService {
 
     @Transactional(readOnly = true)
@@ -37,9 +38,9 @@ class StudentServiceImpl(
     }
 
     @Transactional
-    override fun update(dto: StudentInfoDto) {
-        val userId = userUtil.getCurrentUserId()
+    override fun update(userId: Long, dto: StudentInfoUpdateDto) {
         val student = studentReader.readByUserId(userId)
+        studentValidator.validDuplicate(student.school.id, dto.grade, dto.classNumber, dto.studentNumber)
         studentProcessor.update(student, dto)
     }
 
