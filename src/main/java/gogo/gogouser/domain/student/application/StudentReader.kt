@@ -1,5 +1,6 @@
 package gogo.gogouser.domain.student.application
 
+import gogo.gogouser.domain.student.application.dto.StudentSearchInfoDto
 import gogo.gogouser.domain.student.persistence.Student
 import gogo.gogouser.domain.student.persistence.StudentRepository
 import gogo.gogouser.global.error.UserException
@@ -14,6 +15,9 @@ class StudentReader(
     fun readByUserId(userId: Long): Student =
         studentRepository.findByUserId(userId)
             ?: throw UserException("Not Found Student user id = $userId", HttpStatus.NOT_FOUND.value())
+
+    fun search(schoolId: Long, name: String): List<StudentSearchInfoDto> =
+        studentRepository.search(schoolId, name)
 
     fun readByIds(studentIds: List<Long>): List<Student> = studentRepository.findByIds(studentIds)
 

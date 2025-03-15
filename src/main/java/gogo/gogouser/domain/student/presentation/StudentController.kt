@@ -3,6 +3,9 @@ package gogo.gogouser.domain.student.presentation
 import gogo.gogouser.domain.student.application.StudentService
 import gogo.gogouser.domain.student.application.dto.StudentBundleDto
 import gogo.gogouser.domain.student.application.dto.StudentDto
+import gogo.gogouser.domain.student.application.dto.StudentSearchDto
+import jakarta.validation.Valid
+import jakarta.validation.constraints.NotBlank
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
@@ -28,6 +31,14 @@ class StudentController(
         @RequestParam("studentIds") studentIs: List<Long>
     ): ResponseEntity<StudentBundleDto> {
         val response = studentService.queryBundle(studentIs)
+        return ResponseEntity.ok(response)
+    }
+
+    @GetMapping("/student/search")
+    fun search(
+        @RequestParam("name") @Valid @NotBlank name: String
+    ): ResponseEntity<StudentSearchDto> {
+        val response = studentService.search(name)
         return ResponseEntity.ok(response)
     }
 

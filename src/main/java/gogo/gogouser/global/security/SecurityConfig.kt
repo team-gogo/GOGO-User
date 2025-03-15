@@ -51,6 +51,9 @@ class SecurityConfig(
                 .requestMatchers(HttpMethod.POST, "/user/auth/refresh").permitAll()
                 .requestMatchers(HttpMethod.POST, "/user/auth/signup").hasRole(Authority.UNAUTHENTICATED.name)
 
+                // student
+                .requestMatchers(HttpMethod.GET, "/user/student/search").hasAnyRole(Authority.USER.name, Authority.STAFF.name)
+
                 // server to server
                 .requestMatchers(HttpMethod.GET, "/user/student").permitAll()
                 .requestMatchers(HttpMethod.GET, "/user/student/bundle").permitAll()
