@@ -30,3 +30,15 @@ data class StudentInfoDto(
     val classNumber: Int,
     val studentNumber: Int,
 )
+
+data class StudentSearchDto(
+    val students: List<StudentSearchInfoDto>
+)
+
+data class StudentSearchInfoDto(
+    val studentId: Long,
+    val name: String,
+    val grade: Int,
+    val classNumber: Int,
+    val studentNumber: Int,
+)
