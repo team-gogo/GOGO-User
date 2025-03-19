@@ -44,6 +44,7 @@ class SecurityConfig(
         http.authorizeHttpRequests { httpRequests ->
             httpRequests
                 // health check
+                .requestMatchers(HttpMethod.GET, "/actuator/**").permitAll()
                 .requestMatchers(HttpMethod.GET, "/user/health").permitAll()
 
                 // auth

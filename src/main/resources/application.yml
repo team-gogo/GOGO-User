@@ -42,3 +42,9 @@ security:
       refreshSecret: 7LCo7J2A7Jqw66y8ap7KCE6riw7LCo7J2A7Jqw66y867OR7Lap7KCE6riwd23e4SDf4sdfDFSDF4fwfsdf2342344fDfsdf
       accessExp: 3600000
       refreshExp: 3600000
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: ['prometheus', 'info']
