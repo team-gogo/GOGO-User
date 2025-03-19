@@ -4,6 +4,7 @@ import gogo.gogouser.domain.auth.application.dto.AuthLoginReqDto
 import gogo.gogouser.domain.auth.application.dto.AuthSignUpReqDto
 import gogo.gogouser.domain.auth.application.dto.AuthTokenDto
 import gogo.gogouser.domain.school.root.application.SchoolProcessor
+import gogo.gogouser.domain.student.application.StudentValidator
 import gogo.gogouser.domain.student.persistence.Student
 import gogo.gogouser.domain.student.persistence.StudentRepository
 import gogo.gogouser.domain.user.application.UserProcessor
@@ -26,7 +27,8 @@ class AuthServiceImpl(
     private val jwtGenerator: JwtGenerator,
     private val oauthService: GoogleLoginFeignClientService,
     private val userReader: UserReader,
-    private val studentRepository: StudentRepository
+    private val studentRepository: StudentRepository,
+    private val studentValidator: StudentValidator
 ) : AuthService {
 
     @Transactional
@@ -47,6 +49,7 @@ class AuthServiceImpl(
     override fun signup(dto: AuthSignUpReqDto) {
         val user = userUtil.getCurrentUser()
         val school = schoolProcessor.getSchoolOrCreate(dto)
+        studentValidator.validDuplicate(school.id, dto.grade, dto.classNumber, dto.studentNumber)
         val student = Student.of(user, school, dto)
         studentRepository.save(student)
         userProcessor.signUp(user, dto)
