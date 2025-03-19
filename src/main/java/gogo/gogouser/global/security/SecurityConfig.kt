@@ -3,6 +3,7 @@ package gogo.gogouser.global.security
 import gogo.gogouser.domain.auth.application.AuthReader
 import gogo.gogouser.domain.user.persistence.Authority
 import gogo.gogouser.global.filter.AuthenticationFilter
+import gogo.gogouser.global.filter.LoggingFilter
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.http.HttpMethod
@@ -19,7 +20,8 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource
 class SecurityConfig(
     private val customAccessDeniedHandler: CustomAccessDeniedHandler,
     private val customAuthenticationEntryPointHandler: CustomAuthenticationEntryPointHandler,
-    private val authenticationFilter: AuthenticationFilter
+    private val authenticationFilter: AuthenticationFilter,
+    private val loggingFilter: LoggingFilter
 ) {
 
     @Bean
@@ -39,11 +41,13 @@ class SecurityConfig(
             sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
         }
 
-        http.addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter::class.java)
+        http.addFilterBefore(loggingFilter, UsernamePasswordAuthenticationFilter::class.java)
+            .addFilterBefore(authenticationFilter, LoggingFilter::class.java)
 
         http.authorizeHttpRequests { httpRequests ->
             httpRequests
                 // health check
+                .requestMatchers(HttpMethod.GET, "/actuator/**").permitAll()
                 .requestMatchers(HttpMethod.GET, "/user/health").permitAll()
 
                 // auth
