@@ -53,6 +53,7 @@ class SecurityConfig(
 
                 // student
                 .requestMatchers(HttpMethod.GET, "/user/student/search").hasAnyRole(Authority.USER.name, Authority.STAFF.name)
+                .requestMatchers(HttpMethod.GET, "/user/student/me").hasAnyRole(Authority.USER.name, Authority.STAFF.name)
 
                 // server to server
                 .requestMatchers(HttpMethod.GET, "/user/student").permitAll()

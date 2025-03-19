@@ -1,8 +1,8 @@
 package gogo.gogouser.domain.student.application
 
 import gogo.gogouser.domain.student.application.dto.StudentBundleDto
-import gogo.gogouser.domain.student.application.dto.StudentDto
 import gogo.gogouser.domain.student.application.dto.StudentSearchDto
+import gogo.gogouser.domain.student.persistence.Student
 import gogo.gogouser.global.util.UserUtil
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -15,9 +15,9 @@ class StudentServiceImpl(
 ) : StudentService {
 
     @Transactional(readOnly = true)
-    override fun queryByUserId(userId: Long): StudentDto {
+    override fun queryByUserId(userId: Long): Student {
         val student = studentReader.readByUserId(userId)
-        return studentMapper.map(student)
+        return student
     }
 
     @Transactional(readOnly = true)

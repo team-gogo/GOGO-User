@@ -11,7 +11,6 @@ import org.springframework.stereotype.Component
 class StudentReader(
     private val studentRepository: StudentRepository
 ) {
-
     fun readByUserId(userId: Long): Student =
         studentRepository.findByUserId(userId)
             ?: throw UserException("Not Found Student user id = $userId", HttpStatus.NOT_FOUND.value())
