@@ -37,17 +37,12 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Set up SSH key for deployment
-        uses: appleboy/ssh-action@v0.1.2
-        with:
-          host: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.SSH_USER }}
-          port: 22
+      - name: Install sshpass
+        run: sudo apt-get update && sudo apt-get install -y sshpass
 
-      - name: SSH Command to Deploy
+      - name: SSH Command to Deploy using Password
         run: |
           sshpass -p "${{ secrets.SSH_PASSWORD }}" ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
-
             mkdir -p /home/ubuntu/gogo-user
             cd /home/ubuntu/gogo-user
 
@@ -58,8 +53,10 @@ jobs:
             fi
 
             docker build -f DockerFileStage -t gogo-user-stage .
+          
             docker stop gogo-user-stage || true
             docker rm gogo-user-stage || true
+
             docker run -d -p 8081:8081 --name gogo-user-stage gogo-user-stage
           EOF
 
