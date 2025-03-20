@@ -52,7 +52,7 @@ jobs:
               git pull origin develop
             fi
           
-            ./gradlew clean build
+            ./gradlew build
 
             docker build -f DockerFileStage -t gogo-user-stage .
           

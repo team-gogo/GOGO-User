@@ -4,7 +4,7 @@ EXPOSE 8081
 
 WORKDIR /home/ubuntu/gogo-user
 
-COPY build/libs/*.jar stage-user.jar
+COPY build/libs/gogo-user-0.0.1-SNAPSHOT.jar stage-user.jar
 
 RUN ln -snf /usr/share/zoneinfo/Asia/Seoul /etc/localtime
 
