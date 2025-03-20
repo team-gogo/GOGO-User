@@ -1,5 +1,6 @@
 package gogo.gogouser.domain.auth.application
 
+import gogo.gogouser.domain.auth.application.dto.AuthLoginDto
 import gogo.gogouser.domain.auth.application.dto.AuthLoginReqDto
 import gogo.gogouser.domain.auth.application.dto.AuthSignUpReqDto
 import gogo.gogouser.domain.auth.application.dto.AuthTokenDto
@@ -28,14 +29,16 @@ class AuthServiceImpl(
     private val oauthService: GoogleLoginFeignClientService,
     private val userReader: UserReader,
     private val studentRepository: StudentRepository,
-    private val studentValidator: StudentValidator
+    private val studentValidator: StudentValidator,
+    private val authMapper: AuthMapper
 ) : AuthService {
 
     @Transactional
-    override fun login(dto: AuthLoginReqDto): AuthTokenDto {
+    override fun login(dto: AuthLoginReqDto): AuthLoginDto {
         val email = oauthService.login(dto.oauthToken).email
         val user = userProcessor.getUserOrCreate(email)
-        return generateToken(user)
+        val tokenDto = generateToken(user)
+        return authMapper.login(tokenDto, user)
     }
 
     @Transactional

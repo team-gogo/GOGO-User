@@ -1,6 +1,7 @@
 package gogo.gogouser.domain.auth.application.dto
 
 import gogo.gogouser.domain.school.root.persistence.SchoolType
+import gogo.gogouser.domain.user.persistence.Authority
 import gogo.gogouser.domain.user.persistence.Sex
 import jakarta.validation.constraints.NotBlank
 import jakarta.validation.constraints.NotNull
@@ -40,6 +41,12 @@ data class SchoolInfoDto(
     val region: String,
     @NotNull
     val phoneNumber: String,
+)
+
+data class AuthLoginDto(
+    val accessToken: String,
+    val refreshToken: String,
+    val authority: Authority,
 )
 
 data class AuthTokenDto(

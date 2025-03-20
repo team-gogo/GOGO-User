@@ -1,6 +1,7 @@
 package gogo.gogouser.domain.auth.presentation
 
 import gogo.gogouser.domain.auth.application.AuthService
+import gogo.gogouser.domain.auth.application.dto.AuthLoginDto
 import gogo.gogouser.domain.auth.application.dto.AuthLoginReqDto
 import gogo.gogouser.domain.auth.application.dto.AuthSignUpReqDto
 import gogo.gogouser.domain.auth.application.dto.AuthTokenDto
@@ -25,7 +26,7 @@ class AuthController(
     @PostMapping("/login")
     fun login(
         @RequestBody @Valid dto: AuthLoginReqDto
-    ): ResponseEntity<AuthTokenDto> {
+    ): ResponseEntity<AuthLoginDto> {
         val response = authService.login(dto)
         return ResponseEntity.ok(response)
     }
