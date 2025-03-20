@@ -2,7 +2,7 @@ FROM openjdk:17-jdk
 
 EXPOSE 8081
 
-WORKDIR /gogo-user
+WORKDIR /home/ubuntu/gogo-user
 
 COPY build/libs/*.jar stage-user.jar
 
