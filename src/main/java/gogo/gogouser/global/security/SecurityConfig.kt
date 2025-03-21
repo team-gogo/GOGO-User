@@ -79,6 +79,7 @@ class SecurityConfig(
 
         // plz custom allowed client origins
         configuration.allowedOrigins = listOf("*")
+        configuration.allowedHeaders = listOf("*")
 
         configuration.allowedMethods = listOf(
             HttpMethod.GET.name(),
