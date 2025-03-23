@@ -43,7 +43,8 @@ class AuthServiceImpl(
 
     @Transactional
     override fun refresh(token: String): AuthTokenDto {
-        val refreshToken = authReader.read(token)
+        val removePrefixToken = token.replace("Bearer ", "").trim()
+        val refreshToken = authReader.read(removePrefixToken)
         val user = userReader.read(refreshToken.userId)
         return generateToken(user)
     }
