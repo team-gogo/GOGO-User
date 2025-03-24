@@ -37,12 +37,23 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Install sshpass
-        run: sudo apt-get update && sudo apt-get install -y sshpass
-
-      - name: SSH Command to Deploy using Password
+      - name: Install sshpass and OpenSSH
         run: |
-          sshpass -p "${{ secrets.SSH_PASSWORD }}" ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
+          sudo apt-get update && sudo apt-get install -y sshpass openssh-client
+
+      - name: SSH Command to Deploy using Bastion and Target Instance
+        run: |
+          SSH_PRIVATE_KEY="${{ secrets.STAGE_BASTION_SSH_KEY }}"
+          REMOTE_USER="ubuntu"
+          BASTION_HOST="${{ secrets.STAGE_BASTION_HOST }}"
+          TARGET_HOST="${{ secrets.STAGE_TARGET_HOST }}"
+
+          echo "$SSH_PRIVATE_KEY" > bastion_key.pem
+          chmod 600 bastion_key.pem
+
+          ssh -i bastion_key.pem -o StrictHostKeyChecking=no -fNT -L 2222:$TARGET_HOST:22 $REMOTE_USER@$BASTION_HOST
+
+          ssh -i bastion_key.pem -o StrictHostKeyChecking=no -p 2222 $REMOTE_USER@localhost << 'EOF'
             mkdir -p /home/ubuntu/gogo-user
             cd /home/ubuntu/gogo-user
 
@@ -51,16 +62,18 @@ jobs:
             else
               git pull origin develop
             fi
-          
-            ./gradlew build
+
+            ./gradlew clean build
 
             docker build -f DockerFileStage -t gogo-user-stage .
-          
+
             docker stop gogo-user-stage || true
             docker rm gogo-user-stage || true
 
-            docker run -d -p 8081:8081 --name gogo-user-stage gogo-user-stage
+            docker run -d -p 8081:8081 --add-host host.docker.internal:host-gateway --name gogo-user-stage gogo-user-stage
           EOF
+
+          rm -f bastion_key.pem
 
       - name: SSH Success Notification
         if: success()
