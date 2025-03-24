@@ -32,7 +32,6 @@ jobs:
 
   deploy:
     runs-on: ubuntu-latest
-    needs: CI
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -41,39 +40,35 @@ jobs:
         run: |
           sudo apt-get update && sudo apt-get install -y sshpass openssh-client
 
+      - name: Create SSH key for Bastion and Target
+        run: |
+          echo "${{ secrets.STAGE_BASTION_SSH_KEY }}" > $HOME/bastion_key.pem
+          chmod 600 $HOME/bastion_key.pem
+
       - name: SSH Command to Deploy using Bastion and Target Instance
         run: |
-          STAGE_BASTION_SSH_KEY="${{ secrets.STAGE_BASTION_SSH_KEY }}"
-          REMOTE_USER="ubuntu"
-          STAGE_BASTION_HOST="${{ secrets.STAGE_BASTION_HOST }}" 
-          STAGE_TARGET_HOST="${{ secrets.STAGE_TARGET_HOST }}" 
+          ssh -i "$HOME/bastion_key.pem" -o StrictHostKeyChecking=no $REMOTE_USER@${{ secrets.STAGE_BASTION_HOST }} << 'EOF'
+
+            ssh -i gogo-stage.pem -o StrictHostKeyChecking=no ubuntu@${{ secrets.STAGE_TARGET_HOST }} << 'TARGET_EOF'
+
+              mkdir -p /home/ubuntu/gogo-user
+              cd /home/ubuntu/gogo-user
           
-          echo "$STAGE_BASTION_SSH_KEY" > bastion_key.pem
-          chmod 600 bastion_key.pem
+              if [ ! -d ".git" ]; then
+                git clone -b develop https://github.com/team-gogo/gogo-user.git .
+              else
+                git pull origin develop
+              fi
           
-          echo "STAGE_BASTION_HOST: $STAGE_BASTION_HOST"
-          echo "STAGE_TARGET_HOST: $STAGE_TARGET_HOST"
+              ./gradlew clean build
           
-          ssh -i bastion_key.pem -o StrictHostKeyChecking=no -fNT -L 2222:${STAGE_TARGET_HOST}:22 ${REMOTE_USER}@${STAGE_BASTION_HOST}
+              docker build -f DockerFileStage -t gogo-user-stage .
           
-          ssh -i bastion_key.pem -o StrictHostKeyChecking=no -p 2222 ${REMOTE_USER}@localhost << 'EOF'
-            mkdir -p /home/ubuntu/gogo-user
-            cd /home/ubuntu/gogo-user
+              docker stop gogo-user-stage || true
+              docker rm gogo-user-stage || true
           
-            if [ ! -d ".git" ]; then
-              git clone -b develop https://github.com/team-gogo/gogo-user.git .
-            else
-              git pull origin develop
-            fi
-          
-            ./gradlew clean build
-          
-            docker build -f DockerFileStage -t gogo-user-stage .
-          
-            docker stop gogo-user-stage || true
-            docker rm gogo-user-stage || true
-          
-            docker run -d -p 8081:8081 --add-host host.docker.internal:host-gateway --name gogo-user-stage gogo-user-stage
+              docker run -d -p 8081:8081 --add-host host.docker.internal:host-gateway --name gogo-user-stage gogo-user-stage
+            TARGET_EOF
           EOF
 
       - name: SSH Success Notification
