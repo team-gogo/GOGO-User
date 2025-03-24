@@ -67,8 +67,6 @@ jobs:
               docker rm gogo-user-stage || true
 
               docker run -d -p 8081:8081 --add-host host.docker.internal:host-gateway --name gogo-user-stage gogo-user-stage
-            EOF2
-          EOF
 
       - name: SSH Success Notification
         if: success()
