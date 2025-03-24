@@ -31,6 +31,7 @@ jobs:
         run: ./gradlew clean build
 
   deploy:
+    needs: CI
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -47,7 +48,7 @@ jobs:
 
       - name: SSH Command to Deploy using Bastion and Target Instance
         run: |
-          ssh -i "$HOME/bastion_key.pem" -o StrictHostKeyChecking=no $REMOTE_USER@${{ secrets.STAGE_BASTION_HOST }} << 'EOF'
+          ssh -i "$HOME/bastion_key.pem" -o StrictHostKeyChecking=no ubuntu@${{ secrets.STAGE_BASTION_HOST }} << 'Bastion_EOF'
 
             ssh -i gogo-stage.pem -o StrictHostKeyChecking=no ubuntu@${{ secrets.STAGE_TARGET_HOST }} << 'TARGET_EOF'
 
@@ -69,7 +70,7 @@ jobs:
           
               docker run -d -p 8081:8081 --add-host host.docker.internal:host-gateway --name gogo-user-stage gogo-user-stage
             TARGET_EOF
-          EOF
+          Bastion_EOF
 
       - name: SSH Success Notification
         if: success()
