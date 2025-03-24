@@ -48,8 +48,8 @@ jobs:
 
       - name: SSH Command to Deploy using Bastion and Target Instance
         run: |
-          ssh -i "$HOME/bastion_key.pem" -o StrictHostKeyChecking=no ubuntu@${{ secrets.STAGE_BASTION_HOST }} << 'B_EOF'
-            ssh -i gogo-stage.pem -o StrictHostKeyChecking=no ubuntu@${{ secrets.STAGE_TARGET_HOST }} << 'T_EOF'
+          ssh -i "$HOME/bastion_key.pem" -o StrictHostKeyChecking=no ubuntu@${{ secrets.STAGE_BASTION_HOST }} << B_EOF
+            ssh -i gogo-stage.pem -o StrictHostKeyChecking=no ubuntu@${{ secrets.STAGE_TARGET_HOST }} << T_EOF
 
               mkdir -p /home/ubuntu/gogo-user
               cd /home/ubuntu/gogo-user
