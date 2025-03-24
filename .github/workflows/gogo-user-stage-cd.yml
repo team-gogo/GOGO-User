@@ -45,8 +45,8 @@ jobs:
         run: |
           SSH_PRIVATE_KEY="${{ secrets.STAGE_BASTION_SSH_KEY }}"
           REMOTE_USER="ubuntu"
-          BASTION_HOST="${{ secrets.STAGE_BASTION_HOST }}"
-          TARGET_HOST="${{ secrets.STAGE_TARGET_HOST }}"
+          BASTION_HOST="${{ secrets.STAGE_BASTION_HOST }}" 
+          TARGET_HOST="${{ secrets.STAGE_TARGET_HOST }}" 
 
           echo "$SSH_PRIVATE_KEY" > bastion_key.pem
           chmod 600 bastion_key.pem
@@ -72,8 +72,6 @@ jobs:
 
             docker run -d -p 8081:8081 --add-host host.docker.internal:host-gateway --name gogo-user-stage gogo-user-stage
           EOF
-
-          rm -f bastion_key.pem
 
       - name: SSH Success Notification
         if: success()
