@@ -48,29 +48,27 @@ jobs:
 
       - name: SSH Command to Deploy using Bastion and Target Instance
         run: |
-          ssh -i "$HOME/bastion_key.pem" -o StrictHostKeyChecking=no ubuntu@${{ secrets.STAGE_BASTION_HOST }} << 'EOF'
-            ssh -i gogo-stage.pem -o StrictHostKeyChecking=no ubuntu@${{ secrets.STAGE_TARGET_HOST }} << 'EOF'
-
+          ssh -i "$HOME/bastion_key.pem" -o StrictHostKeyChecking=no ubuntu@${{ secrets.STAGE_BASTION_HOST }} << 'B_EOF'
+            ssh -i gogo-stage.pem -o StrictHostKeyChecking=no ubuntu@${{ secrets.STAGE_TARGET_HOST }} << 'T_EOF'
               mkdir -p /home/ubuntu/gogo-user
               cd /home/ubuntu/gogo-user
-          
+
               if [ ! -d ".git" ]; then
                 git clone -b develop https://github.com/team-gogo/gogo-user.git .
               else
                 git pull origin develop
               fi
-          
+
               ./gradlew clean build
-          
+
               docker build -f DockerFileStage -t gogo-user-stage .
-          
+
               docker stop gogo-user-stage || true
               docker rm gogo-user-stage || true
-          
+
               docker run -d -p 8081:8081 --add-host host.docker.internal:host-gateway --name gogo-user-stage gogo-user-stage
-          
-            EOF
-          EOF
+            T_EOF
+          B_EOF
 
       - name: SSH Success Notification
         if: success()
