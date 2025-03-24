@@ -48,9 +48,8 @@ jobs:
 
       - name: SSH Command to Deploy using Bastion and Target Instance
         run: |
-          ssh -i "$HOME/bastion_key.pem" -o StrictHostKeyChecking=no ubuntu@${{ secrets.STAGE_BASTION_HOST }} << 'Bastion_EOF'
-
-            ssh -i gogo-stage.pem -o StrictHostKeyChecking=no ubuntu@${{ secrets.STAGE_TARGET_HOST }} << 'TARGET_EOF'
+          ssh -i "$HOME/bastion_key.pem" -o StrictHostKeyChecking=no ubuntu@${{ secrets.STAGE_BASTION_HOST }} << 'B_EOF'
+            ssh -i gogo-stage.pem -o StrictHostKeyChecking=no ubuntu@${{ secrets.STAGE_TARGET_HOST }} << 'T_EOF'
 
               mkdir -p /home/ubuntu/gogo-user
               cd /home/ubuntu/gogo-user
@@ -69,8 +68,10 @@ jobs:
               docker rm gogo-user-stage || true
           
               docker run -d -p 8081:8081 --add-host host.docker.internal:host-gateway --name gogo-user-stage gogo-user-stage
-            TARGET_EOF
-          Bastion_EOF
+          
+            T_EOF
+          
+          B_EOF
 
       - name: SSH Success Notification
         if: success()
