@@ -50,13 +50,14 @@ class AuthServiceImpl(
     }
 
     @Transactional
-    override fun signup(dto: AuthSignUpReqDto) {
+    override fun signup(dto: AuthSignUpReqDto): AuthTokenDto {
         val user = userUtil.getCurrentUser()
         val school = schoolProcessor.getSchoolOrCreate(dto)
         studentValidator.validDuplicate(school.id, dto.grade, dto.classNumber, dto.studentNumber)
         val student = Student.of(user, school, dto)
         studentRepository.save(student)
-        userProcessor.signUp(user, dto)
+        val signedUser = userProcessor.signUp(user, dto)
+        return generateToken(signedUser)
     }
 
     private fun generateToken(user: User): AuthTokenDto {
