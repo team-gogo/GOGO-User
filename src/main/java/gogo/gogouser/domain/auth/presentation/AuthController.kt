@@ -37,9 +37,9 @@ class AuthController(
     @PostMapping("/signup")
     fun signup(
         @RequestBody @Valid dto: AuthSignUpReqDto
-    ): ResponseEntity<Void> {
-        authService.signup(dto)
-        return ResponseEntity.ok().build()
+    ): ResponseEntity<AuthTokenDto> {
+        val response = authService.signup(dto)
+        return ResponseEntity.ok(response)
     }
 
 }

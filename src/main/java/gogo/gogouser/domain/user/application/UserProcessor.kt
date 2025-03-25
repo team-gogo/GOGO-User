@@ -15,9 +15,9 @@ class UserProcessor(
         userReader.readByEmailOrNull(email)
             ?: userRepository.save(User.of(email))
 
-    fun signUp(user: User, dto: AuthSignUpReqDto) {
+    fun signUp(user: User, dto: AuthSignUpReqDto): User {
         user.signUp(dto)
-        userRepository.save(user)
+        return userRepository.save(user)
     }
 
 }
