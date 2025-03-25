@@ -68,10 +68,8 @@ class SecurityConfig(
                 .requestMatchers(HttpMethod.PATCH, "/user/student/me").hasAnyRole(Authority.USER.name, Authority.STAFF.name)
 
                 // server to server
-//                .requestMatchers(HttpMethod.GET, "/user/student").access { _, context -> hasIpAddress(context) }
-//                .requestMatchers(HttpMethod.GET, "/user/student/bundle").access { _, context -> hasIpAddress(context) }
-                .requestMatchers(HttpMethod.GET, "/user/student").permitAll()
-                .requestMatchers(HttpMethod.GET, "/user/student/bundle").permitAll()
+                .requestMatchers(HttpMethod.GET, "/user/student").access { _, context -> hasIpAddress(context) }
+                .requestMatchers(HttpMethod.GET, "/user/student/bundle").access { _, context -> hasIpAddress(context) }
 
                 .anyRequest().denyAll()
         }
