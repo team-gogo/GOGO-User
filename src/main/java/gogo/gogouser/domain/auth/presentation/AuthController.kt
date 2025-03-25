@@ -18,11 +18,6 @@ class AuthController(
     private val jwtGenerator: JwtGenerator,
 ) {
 
-    @PostMapping("/test-login/{user_id}")
-    fun test(
-        @PathVariable("user_id") userId: Long,
-    ) = jwtGenerator.generateToken(userId.toString(), Authority.USER)
-
     @PostMapping("/login")
     fun login(
         @RequestBody @Valid dto: AuthLoginReqDto
