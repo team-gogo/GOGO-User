@@ -1,6 +1,6 @@
 package gogo.gogouser.domain.student.application
 
-import gogo.gogouser.domain.school.root.persistence.School
+import gogo.gogouser.domain.student.persistence.Student
 import gogo.gogouser.domain.student.persistence.StudentRepository
 import gogo.gogouser.global.error.UserException
 import org.springframework.http.HttpStatus
@@ -11,9 +11,17 @@ class StudentValidator(
     private val studentRepository: StudentRepository
 ) {
 
-    fun validDuplicate(schoolId: Long, grade: Int, classNumber: Int, studentNumber: Int) {
+    fun validDuplicate(student: Student, grade: Int, classNumber: Int, studentNumber: Int) {
+        if (
+            student.grade == grade &&
+            student.classNumber == classNumber &&
+            student.studentNumber == studentNumber
+        ) {
+            return
+        }
+
         val isDuplicate = studentRepository.existsBySchoolIdAndGradeAndClassNumberAndStudentNumber(
-            schoolId = schoolId,
+            schoolId = student.school.id,
             grade = grade,
             classNumber = classNumber,
             studentNumber = studentNumber
