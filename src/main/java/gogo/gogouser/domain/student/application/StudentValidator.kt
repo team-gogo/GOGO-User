@@ -11,17 +11,19 @@ class StudentValidator(
     private val studentRepository: StudentRepository
 ) {
 
-    fun validDuplicate(student: Student, grade: Int, classNumber: Int, studentNumber: Int) {
+    fun validUpdate(student: Student, grade: Int, classNumber: Int, studentNumber: Int) {
         if (
-            student.grade == grade &&
-            student.classNumber == classNumber &&
-            student.studentNumber == studentNumber
+            student.grade != grade ||
+            student.classNumber != classNumber ||
+            student.studentNumber != studentNumber
         ) {
-            return
+            validDuplicate(student.school.id, grade, classNumber, studentNumber)
         }
+    }
 
+    fun validDuplicate(schoolId: Long, grade: Int, classNumber: Int, studentNumber: Int) {
         val isDuplicate = studentRepository.existsBySchoolIdAndGradeAndClassNumberAndStudentNumber(
-            schoolId = student.school.id,
+            schoolId = schoolId,
             grade = grade,
             classNumber = classNumber,
             studentNumber = studentNumber

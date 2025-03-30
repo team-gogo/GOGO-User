@@ -40,7 +40,7 @@ class StudentServiceImpl(
     @Transactional
     override fun update(userId: Long, dto: StudentInfoUpdateDto) {
         val student = studentReader.readByUserId(userId)
-        studentValidator.validDuplicate(student, dto.grade, dto.classNumber, dto.studentNumber)
+        studentValidator.validUpdate(student, dto.grade, dto.classNumber, dto.studentNumber)
         studentProcessor.update(student, dto)
     }
 
