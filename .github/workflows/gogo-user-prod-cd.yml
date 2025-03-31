@@ -50,8 +50,8 @@ jobs:
         run: |
           ssh -i "$HOME/bastion_key.pem" -o StrictHostKeyChecking=no ubuntu@${{ secrets.PROD_BASTION_HOST }} << 'EOF'
             ssh -i gogo-prod.pem -o StrictHostKeyChecking=no ubuntu@${{ secrets.PROD_TARGET_HOST }} << 'EOF2'
-              mkdir -p /home/ubuntu/gogo-stage
-              cd /home/ubuntu/gogo-stage
+              mkdir -p /home/ubuntu/gogo-user
+              cd /home/ubuntu/gogo-user
 
               if [ ! -d ".git" ]; then
                 git clone -b develop https://github.com/team-gogo/gogo-user.git .
