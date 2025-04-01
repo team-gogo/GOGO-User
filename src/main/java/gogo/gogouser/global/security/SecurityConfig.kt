@@ -7,21 +7,28 @@ import gogo.gogouser.global.filter.LoggingFilter
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.http.HttpMethod
+import org.springframework.security.authorization.AuthorizationDecision
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.http.SessionCreationPolicy
+import org.springframework.security.core.Authentication
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.web.SecurityFilterChain
+import org.springframework.security.web.access.intercept.RequestAuthorizationContext
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
+import org.springframework.security.web.util.matcher.IpAddressMatcher
 import org.springframework.web.cors.CorsConfiguration
 import org.springframework.web.cors.CorsConfigurationSource
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource
+import java.util.function.Supplier
+
 
 @Configuration
 class SecurityConfig(
     private val customAccessDeniedHandler: CustomAccessDeniedHandler,
     private val customAuthenticationEntryPointHandler: CustomAuthenticationEntryPointHandler,
     private val authenticationFilter: AuthenticationFilter,
-    private val loggingFilter: LoggingFilter
+    private val loggingFilter: LoggingFilter,
+    private val securityProperties: SecurityProperties,
 ) {
 
     @Bean
@@ -61,16 +68,18 @@ class SecurityConfig(
                 .requestMatchers(HttpMethod.PATCH, "/user/student/me").hasAnyRole(Authority.USER.name, Authority.STAFF.name)
 
                 // server to server
-                .requestMatchers(HttpMethod.GET, "/user/student").permitAll()
-                .requestMatchers(HttpMethod.GET, "/user/student/bundle").permitAll()
-
-                // test
-                .requestMatchers(HttpMethod.POST, "/user/auth/test-login/{user_id}").permitAll()
+                .requestMatchers(HttpMethod.GET, "/user/student").access { _, context -> hasIpAddress(context) }
+                .requestMatchers(HttpMethod.GET, "/user/student/bundle").access { _, context -> hasIpAddress(context) }
 
                 .anyRequest().denyAll()
         }
 
         return http.build()
+    }
+
+    private fun hasIpAddress(context: RequestAuthorizationContext): AuthorizationDecision {
+        val ALLOWED_IP_ADDRESS_MATCHER = IpAddressMatcher("${securityProperties.serverToServerIp}${securityProperties.serverToServerSubnet}")
+        return AuthorizationDecision(ALLOWED_IP_ADDRESS_MATCHER.matches(context.request))
     }
 
     @Bean
@@ -79,6 +88,7 @@ class SecurityConfig(
 
         // plz custom allowed client origins
         configuration.allowedOrigins = listOf("*")
+        configuration.allowedHeaders = listOf("*")
 
         configuration.allowedMethods = listOf(
             HttpMethod.GET.name(),

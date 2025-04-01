@@ -1,5 +1,6 @@
 package gogo.gogouser.domain.auth.application
 
+import gogo.gogouser.domain.auth.application.dto.AuthLoginDto
 import gogo.gogouser.domain.auth.application.dto.AuthLoginReqDto
 import gogo.gogouser.domain.auth.application.dto.AuthSignUpReqDto
 import gogo.gogouser.domain.auth.application.dto.AuthTokenDto
@@ -28,31 +29,35 @@ class AuthServiceImpl(
     private val oauthService: GoogleLoginFeignClientService,
     private val userReader: UserReader,
     private val studentRepository: StudentRepository,
-    private val studentValidator: StudentValidator
+    private val studentValidator: StudentValidator,
+    private val authMapper: AuthMapper
 ) : AuthService {
 
     @Transactional
-    override fun login(dto: AuthLoginReqDto): AuthTokenDto {
+    override fun login(dto: AuthLoginReqDto): AuthLoginDto {
         val email = oauthService.login(dto.oauthToken).email
         val user = userProcessor.getUserOrCreate(email)
-        return generateToken(user)
+        val tokenDto = generateToken(user)
+        return authMapper.login(tokenDto, user)
     }
 
     @Transactional
     override fun refresh(token: String): AuthTokenDto {
-        val refreshToken = authReader.read(token)
+        val removePrefixToken = token.replace("Bearer ", "").trim()
+        val refreshToken = authReader.read(removePrefixToken)
         val user = userReader.read(refreshToken.userId)
         return generateToken(user)
     }
 
     @Transactional
-    override fun signup(dto: AuthSignUpReqDto) {
+    override fun signup(dto: AuthSignUpReqDto): AuthTokenDto {
         val user = userUtil.getCurrentUser()
         val school = schoolProcessor.getSchoolOrCreate(dto)
         studentValidator.validDuplicate(school.id, dto.grade, dto.classNumber, dto.studentNumber)
         val student = Student.of(user, school, dto)
         studentRepository.save(student)
-        userProcessor.signUp(user, dto)
+        val signedUser = userProcessor.signUp(user, dto)
+        return generateToken(signedUser)
     }
 
     private fun generateToken(user: User): AuthTokenDto {

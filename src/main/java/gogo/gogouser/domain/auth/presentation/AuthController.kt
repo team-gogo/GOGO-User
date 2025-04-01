@@ -1,6 +1,7 @@
 package gogo.gogouser.domain.auth.presentation
 
 import gogo.gogouser.domain.auth.application.AuthService
+import gogo.gogouser.domain.auth.application.dto.AuthLoginDto
 import gogo.gogouser.domain.auth.application.dto.AuthLoginReqDto
 import gogo.gogouser.domain.auth.application.dto.AuthSignUpReqDto
 import gogo.gogouser.domain.auth.application.dto.AuthTokenDto
@@ -17,15 +18,10 @@ class AuthController(
     private val jwtGenerator: JwtGenerator,
 ) {
 
-    @PostMapping("/test-login/{user_id}")
-    fun test(
-        @PathVariable("user_id") userId: Long,
-    ) = jwtGenerator.generateToken(userId.toString(), Authority.USER)
-
     @PostMapping("/login")
     fun login(
         @RequestBody @Valid dto: AuthLoginReqDto
-    ): ResponseEntity<AuthTokenDto> {
+    ): ResponseEntity<AuthLoginDto> {
         val response = authService.login(dto)
         return ResponseEntity.ok(response)
     }
@@ -41,9 +37,9 @@ class AuthController(
     @PostMapping("/signup")
     fun signup(
         @RequestBody @Valid dto: AuthSignUpReqDto
-    ): ResponseEntity<Void> {
-        authService.signup(dto)
-        return ResponseEntity.ok().build()
+    ): ResponseEntity<AuthTokenDto> {
+        val response = authService.signup(dto)
+        return ResponseEntity.ok(response)
     }
 
 }
