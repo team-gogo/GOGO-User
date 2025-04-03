@@ -48,24 +48,25 @@ jobs:
 
       - name: SSH Command to Deploy using Bastion and Target Instance
         run: |
-          sshpass -p "${{ secrets.STAGE_ON_PREMISE_PASSWORD }}" ssh -o StrictHostKeyChecking=no ubuntu@${{ secrets.STAGE_ON_PREMISE_HOST }} << 'EOF'
-            mkdir -p /home/ubuntu/gogo-user
-            cd /home/ubuntu/gogo-user
+          ssh -i "$HOME/bastion_key.pem" -o StrictHostKeyChecking=no ubuntu@${{ secrets.STAGE_BASTION_HOST }} << 'EOF'
+            ssh -i gogo-stage.pem -o StrictHostKeyChecking=no ubuntu@${{ secrets.STAGE_TARGET_HOST }} << 'EOF2'
+              mkdir -p /home/ubuntu/gogo-user
+              cd /home/ubuntu/gogo-user
 
-            if [ ! -d ".git" ]; then
-              git clone -b develop https://github.com/team-gogo/gogo-user.git .
-            else
-              git pull origin develop
-            fi
-          
-            ./gradlew clean build
+              if [ ! -d ".git" ]; then
+                git clone -b develop https://github.com/team-gogo/gogo-user.git .
+              else
+                git pull origin develop
+              fi
 
-            docker build -f DockerFileStage -t gogo-user-stage .
+              ./gradlew clean build
 
-            docker stop gogo-user-stage || true
-            docker rm gogo-user-stage || true
+              docker build -f DockerFileStage -t gogo-user-stage .
 
-            docker run -d -p 8081:8081 --add-host host.docker.internal:host-gateway --name gogo-user-stage gogo-user-stage
+              docker stop gogo-user-stage || true
+              docker rm gogo-user-stage || true
+
+              docker run -d -p 8081:8081 --add-host host.docker.internal:host-gateway --name gogo-user-stage gogo-user-stage
 
       - name: SSH Success Notification
         if: success()
