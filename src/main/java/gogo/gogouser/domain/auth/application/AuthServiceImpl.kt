@@ -30,12 +30,14 @@ class AuthServiceImpl(
     private val userReader: UserReader,
     private val studentRepository: StudentRepository,
     private val studentValidator: StudentValidator,
-    private val authMapper: AuthMapper
+    private val authMapper: AuthMapper,
+    private val authValidator: AuthValidator
 ) : AuthService {
 
     @Transactional
     override fun login(dto: AuthLoginReqDto): AuthLoginDto {
         val email = oauthService.login(dto.oauthToken).email
+        authValidator.validGSMLogin(email)
         val user = userProcessor.getUserOrCreate(email)
         val tokenDto = generateToken(user)
         return authMapper.login(tokenDto, user)
