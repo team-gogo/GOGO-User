@@ -1,4 +1,4 @@
-name: GOGO User stage CD Workflow
+name: GOGO User On-premise stage CD Workflow
 
 #on:
 #  push:
@@ -41,11 +41,6 @@ jobs:
         run: |
           sudo apt-get update && sudo apt-get install -y sshpass openssh-client
 
-      - name: Create SSH key for Bastion and Target
-        run: |
-          echo "${{ secrets.STAGE_BASTION_SSH_KEY }}" > $HOME/bastion_key.pem
-          chmod 600 $HOME/bastion_key.pem
-
       - name: SSH Command to Deploy using Bastion and Target Instance
         run: |
           sshpass -p "${{ secrets.STAGE_ON_PREMISE_PASSWORD }}" ssh -o StrictHostKeyChecking=no ubuntu@${{ secrets.STAGE_ON_PREMISE_HOST }} << 'EOF'
@@ -57,7 +52,7 @@ jobs:
             else
               git pull origin develop
             fi
-          
+
             ./gradlew clean build
 
             docker build -f DockerFileStage -t gogo-user-stage .
