@@ -75,7 +75,7 @@ jobs:
           webhook: ${{ secrets.DISCORD_WEBHOOK }}
           color: 0x4CAF50
           title: "배포 성공"
-          message: "GOGO User On-premise stage deployment completed successfully."
+          message: "GOGO User stage deployment completed successfully."
 
       - name: SSH Failure Notification
         if: failure()
@@ -84,4 +84,4 @@ jobs:
           webhook: ${{ secrets.DISCORD_WEBHOOK }}
           color: 0xFF4C4C
           title: "배포 실패"
-          message: "GOGO User On-premise stage deployment failed. Check the logs for details."
+          message: "GOGO User stage deployment failed. Check the logs for details."
